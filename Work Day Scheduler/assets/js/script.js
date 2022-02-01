@@ -1,10 +1,9 @@
 today = moment();
 var scheduleStartTime = 9;
-var scheduleEndTime = 17;
+var scheduleEndTime = 16;
 
 $("#currentDay").text(today.format("dddd, MMMM Do, YYYY")); //set the date in the header
-
-
+populatePage();
 
 function populatePage() {    
     for (let i=scheduleStartTime; i<=scheduleEndTime; i++){
@@ -25,13 +24,13 @@ function populatePage() {
     
     //assign the appropriate class depending on whether the time block is in the future, past, or present for today
     if (moment().hour()>i) {
-        newTimeBlockEl.children("textarea").attr("class", "future description col-9 border");
+        newTimeBlockEl.children("textarea").attr("class", "past description col-9 border");
     }
     else if (moment().hour()==i) {
         newTimeBlockEl.children("textarea").attr("class", "present description col-9 border");
     }
     else {
-        newTimeBlockEl.children("textarea").attr("class", "past description col-9 border");
+        newTimeBlockEl.children("textarea").attr("class", "future description col-9 border");
     }
     
     if(localStorage.getItem("savedSchedule")){ // If available, populate any previously saved entries for this time slot from local storage
@@ -65,8 +64,9 @@ function savePage () {
     localStorage.setItem("savedSchedule", JSON.stringify(unsavedSchedule));
 }
 
-function clearPage () {
+function clearStorage () {
     localStorage.removeItem("savedSchedule");
+    location.reload();
 }
 
 // Saving user inputs:
@@ -77,7 +77,8 @@ $("textarea").on("keypress", function(event){ //if the user hits "Enter", save w
     }
 });
 
-$("button").on("click", savePage); //if the user hits the save button, saves what's on the page
+$(".saveBtn").on("click", savePage); //if the user hits the save button, saves what's on the page
+$("#clear-storage-btn").on("click", clearStorage);
 
 
 
